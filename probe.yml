@@ -1,28 +1,33 @@
 ---
 apiVersion: v1
-kind: pod
+kind: Pod
 metadata:
   name: probe-container
 spec:
-  container:
+  containers:
     - name: nginxcontainer
       image: nginx:latest
       livenessProbe:
         initialDelaySeconds: 10
         failureThreshold: 3
-        successThreshold: 5
+        successThreshold: 1
         periodSeconds: 30
         timeoutSeconds: 60
+        tcpSocket:
+          port: 8000
       ports:
         - name: nginxport
           protocol: TCP
-          containerport: 8000
+          containerPort: 8000
       readinessProbe:
         initialDelaySeconds: 10
         failureThreshold: 3
         successThreshold: 5
         periodSeconds: 30
         timeoutSeconds: 60
+        httpGet:
+          path: /docs
+          port: 8000
       resources:
         requests:
           memory: 120M
@@ -33,6 +38,8 @@ spec:
       startupProbe:
         initialDelaySeconds: 10
         failureThreshold: 3
-        successThreshold: 5
+        successThreshold: 1
         periodSeconds: 30
         timeoutSeconds: 60
+        tcpSocket:
+          port: 8000
